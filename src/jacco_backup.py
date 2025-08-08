@@ -6,6 +6,9 @@ import time
 import logging
 import requests
 import config_loader
+from smb.SMBConnection import SMBConnection
+
+
 
 
 def log_exception(type, value, tb):
@@ -57,14 +60,12 @@ def wakeonlan(server_mac: str):
 
     os.system(wol_command)
 
-def samba_up(server_adress: str,):
-    
-    server_response = requests.get(f"http://{server_adress}")
+def samba_up(server_adress: str, share_name: str, user_name: str, pass_word: str):
+    conn = SMBConnection(user_name, pass_word, share_name, server_adress)
+    conn.connect(server_adress)
 
-    while not server_response.ok():
-        time.sleep(60)
-        server_response = requests.get(f"http://{server_adress}")
-
+    accessible = share_name in conn.listShares()
+    print(accessible)
 
 def send_telegram_notification():
     None
@@ -84,7 +85,7 @@ def main():
     check_connection(loaded_config.host_name,loaded_config.ping_interval)
     enable_vpn()
     #wakeonlan(loaded_config.server_mac)
-    samba_up(loaded_config.server_adress)
+    samba_up(loaded_config.server_adress, loaded_config.samba_share_name, loaded_config.samba_user_name, loaded_config.samba_password)
     #time.sleep(loaded_config.wait_time_before_attempt_connect_server)
 
     None
