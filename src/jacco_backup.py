@@ -8,8 +8,6 @@ import config_loader
 from smb.SMBConnection import SMBConnection
 
 
-
-
 def log_exception(type, value, tb):
     logging.exception("Uncaught exception: {0}".format(str(value)))
 
@@ -84,7 +82,6 @@ def check_if_samba_accessible(server_adress: str, share_name: str, user_name: st
     if error_count == 3:
         send_telegram_notification()
         raise RuntimeError ("tried to connect to samba share 3 times and failed")
-
 
 def send_telegram_notification():
     None
