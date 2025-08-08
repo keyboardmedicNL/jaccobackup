@@ -99,6 +99,9 @@ def give_root_acces_xterm():
 def unmount_samba():
     None
 
+def disconnect_vpn():
+    None
+
 def main():
 
     #logic to allow exceptions to be logged to log file
@@ -114,6 +117,7 @@ def main():
     give_root_acces_xterm()
     launch_freefilesync()
     unmount_samba()
+    disconnect_vpn()
 
     logging.info("script finished...")
 
