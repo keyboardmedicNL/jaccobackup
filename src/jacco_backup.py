@@ -4,16 +4,14 @@ housey_logging.configure()
 import os
 import time
 import logging
+import requests
+import config_loader
 
-#logger = logging.getLogger(__name__)
-host_name = "192.168.192.20"
-server_mac = "00:25:90:A9:67:89"
-ping_interval = 1
 
 def log_exception(type, value, tb):
     logging.exception("Uncaught exception: {0}".format(str(value)))
 
-def check_connection(hostname_to_ping: str):
+def check_connection(hostname_to_ping: str, ping_interval: int):
 
     logging.info("checking if %s is online trough ping", hostname_to_ping)
 
@@ -55,14 +53,20 @@ def enable_vpn():
 def wakeonlan(server_mac: str):
 
     wol_command = f"wakeonlan {server_mac}"
+    logging.debug("command to send to os: %s",wol_command)
 
-    wol_response = os.system(wol_command)
-    print(wol_response)
+    os.system(wol_command)
+
+def samba_up(server_adress: str,):
+    
+    server_response = requests.get(f"http://{server_adress}")
+
+    while not server_response.ok():
+        time.sleep(60)
+        server_response = requests.get(f"http://{server_adress}")
+
 
 def send_telegram_notification():
-    None
-
-def check_online():
     None
 
 def mount_samba():
@@ -75,9 +79,14 @@ def give_root_acces_xterm():
     None
 
 def main():
-    check_connection(host_name)
+    loaded_config = config_loader.load_config()
+
+    check_connection(loaded_config.host_name,loaded_config.ping_interval)
     enable_vpn()
-    wakeonlan(server_mac)
+    #wakeonlan(loaded_config.server_mac)
+    samba_up(loaded_config.server_adress)
+    #time.sleep(loaded_config.wait_time_before_attempt_connect_server)
+
     None
 
 
