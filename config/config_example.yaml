@@ -1,0 +1,8 @@
+host_name: 
+server_mac: 
+server_adress: 
+ping_interval:  
+samba_share_name: 
+samba_user_name: 
+samba_password: 
+samba_wait_time:
