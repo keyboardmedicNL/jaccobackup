@@ -7,7 +7,7 @@ import logging
 
 #logger = logging.getLogger(__name__)
 host_name = "192.168.192.20"
-server_mac = ""
+server_mac = "00:25:90:A9:67:89"
 ping_interval = 1
 
 def log_exception(type, value, tb):
