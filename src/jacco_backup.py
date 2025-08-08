@@ -77,7 +77,7 @@ def give_root_acces_xterm():
 def main():
     check_connection(host_name)
     enable_vpn()
-    wakeonlan()
+    wakeonlan(server_mac)
     None
 
 
