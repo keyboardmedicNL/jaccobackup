@@ -100,7 +100,7 @@ def unmount_samba():
     None
 
 def main():
-    
+
     #logic to allow exceptions to be logged to log file
     sys.excepthook = log_exception
 
@@ -108,7 +108,7 @@ def main():
 
     check_connection_to_vpn_host(loaded_config.host_name,loaded_config.ping_interval)
     enable_vpn()
-    #wakeonlan(loaded_config.server_mac)
+    #wakeonlan(loaded_config.server_mac) #commented out to allow testing in windows enviroment
     check_if_samba_accessible(loaded_config.server_adress, loaded_config.samba_share_name, loaded_config.samba_user_name, loaded_config.samba_password, loaded_config.samba_wait_time)
     mount_samba()
     give_root_acces_xterm()
