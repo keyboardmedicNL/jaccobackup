@@ -6,6 +6,7 @@ import time
 import logging
 import config_loader
 from smb.SMBConnection import SMBConnection
+import sys
 
 
 def log_exception(type, value, tb):
@@ -34,7 +35,6 @@ def check_connection_to_vpn_host(hostname_to_ping: str, ping_interval: int):
             break
         else:
             error_count = error_count+1
-
             errors_remaining = 3-error_count
             
             if not error_count == 3:
@@ -74,11 +74,13 @@ def check_if_samba_accessible(server_adress: str, share_name: str, user_name: st
             break
 
         except:
+            error_count = error_count+1
+            errors_remaining = 3-error_count
+
             if not error_count == 3:
-                error_count = error_count+1
-                errors_remaining = 3-error_count
                 logging.error("unable to connect to samba share from server %s trying %s more times and waiting for %s seconds", server_adress, errors_remaining, samba_wait_time)
                 time.sleep(samba_wait_time)
+                
     if error_count == 3:
         send_telegram_notification()
         raise RuntimeError ("tried to connect to samba share 3 times and failed")
@@ -96,6 +98,7 @@ def give_root_acces_xterm():
     None
 
 def main():
+    sys.excepthook = log_exception
 
     loaded_config = config_loader.load_config()
 
