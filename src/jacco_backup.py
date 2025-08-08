@@ -13,7 +13,7 @@ from smb.SMBConnection import SMBConnection
 def log_exception(type, value, tb):
     logging.exception("Uncaught exception: {0}".format(str(value)))
 
-def check_connection(hostname_to_ping: str, ping_interval: int):
+def check_connection_to_vpn_host(hostname_to_ping: str, ping_interval: int):
 
     logging.info("checking if %s is online trough ping", hostname_to_ping)
 
@@ -54,12 +54,14 @@ def enable_vpn():
 
 def wakeonlan(server_mac: str):
 
+    logging.info("sending wake on lan magic packet to adress %s",server_mac)
+
     wol_command = f"wakeonlan {server_mac}"
     logging.debug("command to send to os: %s",wol_command)
 
     os.system(wol_command)
 
-def samba_up(server_adress: str, share_name: str, user_name: str, pass_word: str, samba_wait_time: int):
+def check_if_samba_accessible(server_adress: str, share_name: str, user_name: str, pass_word: str, samba_wait_time: int):
     logging.info("attempting connection to samba share at adress %s", server_adress)
     error_count = 0
     while error_count < 3:
@@ -100,10 +102,10 @@ def main():
 
     loaded_config = config_loader.load_config()
 
-    check_connection(loaded_config.host_name,loaded_config.ping_interval)
+    check_connection_to_vpn_host(loaded_config.host_name,loaded_config.ping_interval)
     enable_vpn()
     #wakeonlan(loaded_config.server_mac)
-    samba_up(loaded_config.server_adress, loaded_config.samba_share_name, loaded_config.samba_user_name, loaded_config.samba_password, loaded_config.samba_wait_time)
+    check_if_samba_accessible(loaded_config.server_adress, loaded_config.samba_share_name, loaded_config.samba_user_name, loaded_config.samba_password, loaded_config.samba_wait_time)
 
     logging.info("script finished...")
 
