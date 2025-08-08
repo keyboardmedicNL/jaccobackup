@@ -45,6 +45,7 @@ def check_connection_to_vpn_host(hostname_to_ping: str, ping_interval: int):
         send_telegram_notification()
         raise RuntimeError(f"{hostname_to_ping} is not online, tried 3 times then failed")
 
+
 def enable_vpn():
     None
 
@@ -95,7 +96,12 @@ def launch_freefilesync():
 def give_root_acces_xterm():
     None
 
+def unmount_samba():
+    None
+
 def main():
+    
+    #logic to allow exceptions to be logged to log file
     sys.excepthook = log_exception
 
     loaded_config = config_loader.load_config()
@@ -104,6 +110,10 @@ def main():
     enable_vpn()
     #wakeonlan(loaded_config.server_mac)
     check_if_samba_accessible(loaded_config.server_adress, loaded_config.samba_share_name, loaded_config.samba_user_name, loaded_config.samba_password, loaded_config.samba_wait_time)
+    mount_samba()
+    give_root_acces_xterm()
+    launch_freefilesync()
+    unmount_samba()
 
     logging.info("script finished...")
 
