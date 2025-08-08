@@ -53,9 +53,11 @@ def enable_vpn():
     None
 
 def wakeonlan(server_mac: str):
+
     wol_command = f"wakeonlan {server_mac}"
 
     wol_response = os.system(wol_command)
+    print(wol_response)
 
 def send_telegram_notification():
     None
